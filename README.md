@@ -1,2 +1,3 @@
-# bluepass
+# BluePass
 Password storage
+
