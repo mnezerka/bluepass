@@ -5,6 +5,8 @@ export default class BluePassDb {
 
     constructor() {
         this.name = 'BluePass Database';
+        this.url = null;
+        this.db = null;
 
         this.data = {
             items: []
@@ -22,15 +24,9 @@ export default class BluePassDb {
         let data = await Rest.get(url);
         console.log(data);
 
-        let dataDecrypted = CryptoJS.AES.decrypt(data, pw);
+        //let dataDecrypted = CryptoJS.AES.decrypt(data, pw);
         console.log('decrypted data', dataDecrypted);
         //#JSON.parse(data);
-    }
-
-    loadFromString(str) {
-        console.log('loadFromString', str)
-        let strDecrypted = CryptoJS.AES.decrypt(str, 'mypass');
-        this.data = JSON.parse(strDecrypted);
     }
 
     saveToString() {
