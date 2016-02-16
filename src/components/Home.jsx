@@ -1,16 +1,22 @@
 import React from 'react';
-import Db from 'stores/Db';
+import AddItem from 'containers/AddItem';
+import VisibleItems from 'containers/VisibleItems';
 
 export default class Home extends React.Component{
+
+    static propTypes = {            
+        dbName: React.PropTypes.string
+    }             
+
+    static defaultProps = {         
+        dbName: null 
+    }       
+
     render() {
-        let db = Db.getDb()
-
-
-        if (db === null) {
-            return (<span>Welcome to BluePass</span>)
-        } else {
-            console.log(db);
-            return (<span>Current DB: {db.name}</span>)
-        }
+        return (
+            <div>
+                <VisibleItems/>
+                <AddItem />
+            </div>)
     }
 }

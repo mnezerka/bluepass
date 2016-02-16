@@ -1,15 +1,17 @@
 import React from 'react';
-import BluePassDb from 'lib/BluePassDb';
+import ReactDOM from 'react-dom';
 
 export default class OpenDb extends React.Component{
     static propTypes = {            
         url: React.PropTypes.string,
-        pw: React.PropTypes.string
+        pw: React.PropTypes.string,
+        onOpen: React.PropTypes.func
     }             
 
     static defaultProps = {         
-        url: 'http://localhost:9966/bluepass',
-        pw: ''
+        url: 'http://localhost:9966/bluepass/index.php',
+        pw: '',
+        onOpen: () => {}
     }       
 
     render() {
@@ -30,12 +32,13 @@ export default class OpenDb extends React.Component{
 
     onSubmit(e) {
         e.preventDefault();
-        let dbUrl = React.findDOMNode(this.openUrl).value;
-        let dbPw = React.findDOMNode(this.openPw).value;
 
-        // try to open database
-        console.log('open db', dbUrl, dbPw);
-        let newDb = new BluePassDb();
-        newDb.loadFromUrl(dbUrl, dbPw); 
+        let dbUrl = ReactDOM.findDOMNode(this.openUrl).value;
+        let dbPw = ReactDOM.findDOMNode(this.openPw).value;
+
+        this.props.onOpen(dbUrl, dbPw);
+
+
+        return;
     }
 }

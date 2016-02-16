@@ -5,21 +5,33 @@ body {
 }
 
 .bp-container {
-    display: flex;
+    /*display: flex;*/
 }
 
-.bp-menu, .bp-content {
-    margin: 10px;
+.bp-content {
+    margin: 3px;
+}
+
+.bp-header {
+    padding-left: 3px;
 }
 
 .bp-menu {
-    width: 100px;
-    list-style: none
+    list-style: none;
 }
 
 .bp-menu li {
+    display: inline-block;
     cursor: pointer;
-    margin-bottom: 5px;
+    padding: 3px 10px 3px 3px;
+}
+
+.bp-menu li:hover {
+    background-color: gray;
+}
+
+.bp-form {
+    margin-top: 10px;
 }
 
 .disabled {
