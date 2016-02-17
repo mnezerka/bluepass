@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {save} from '../actions'
+import {saveDb} from '../actions'
 
 const mapStateToProps = (state) => {
     return {
@@ -8,13 +8,14 @@ const mapStateToProps = (state) => {
     }
 }
 
-let Menu = ({dispatch, pdb, onHome, onOpen}) => {
+let Menu = ({dispatch, pdb, onHome, onOpen, onMeta}) => {
     return (
         <div className="bp-menu">
             <li onClick={onHome}>Home</li>
             <li onClick={onOpen}>Open</li>
+            <li onClick={onMeta}>Meta</li>
             <li onClick={() => {
-                dispatch(save(pdb))
+                dispatch(saveDb(pdb))
             }}>Save DB</li>
         </div>
     )

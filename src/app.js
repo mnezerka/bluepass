@@ -7,8 +7,8 @@ import {createStore, applyMiddleware} from 'redux';
 import App from 'components/App';
 import {Router, Route, IndexRoute} from 'react-router';
 import Home from 'components/Home';
-import CreateDb from 'components/CreateDb';
 import Opener from 'containers/Opener';
+import Meta from 'containers/Meta';
 import {hashHistory} from 'react-router'
 import pdb from 'reducers';
 
@@ -34,8 +34,8 @@ render((
             <Route path="/" component={App}>         
                 <IndexRoute component={Home} /> 
                 <Route path="home" component={Home} /> 
-                <Route path="create" component={CreateDb} />
                 <Route path="open" component={Opener}/>
+                <Route path="meta" component={Meta} /> 
             </Route>
         </Router>
     </Provider>

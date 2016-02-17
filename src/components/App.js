@@ -26,7 +26,7 @@ export default class App extends React.Component{
                 <Menu
                     onHome={this.onHome.bind(this)}
                     onOpen={this.onOpen.bind(this)}
-                    onCreate={this.onCreate.bind(this)}
+                    onMeta={this.onMeta.bind(this)}
                     onSave={this.onSave.bind(this)} />
                 <div className="bp-content">
                     {this.props.children}
@@ -42,6 +42,11 @@ export default class App extends React.Component{
     onOpen() {
         this.context.router.push('open');
     }
+
+    onMeta() {
+        this.context.router.push('meta');
+    }
+
 
     onCreate() {
         this.context.router.push('create');

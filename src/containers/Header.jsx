@@ -6,15 +6,17 @@ const mapStateToProps = (state) => {
         name: state.pdb.name,
         items: state.pdb.items,
         modified: state.pdb.modified,
-        fetching: state.pdb.fetching
+        fetching: state.pdb.fetching,
+        error: state.pdb.error
     }
 }
 
-let Header = ({name, items, modified, fetching}) => {
+let Header = ({name, items, modified, fetching, error}) => {
     return (
         <div className="bp-header">
-            BluePass <b>{name}</b> items:{items.length} modified:{modified ? 'yes' : 'no'}
-            {fetching ? 'fetching' : ''}
+            <b>{name}</b> items:{items.length} modified:{modified ? 'yes' : 'no'}
+            {fetching ? 'fetching' : null}
+            {error && <span className="bp-error">fetching error</span>}
         </div>
     )
 }

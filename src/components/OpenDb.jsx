@@ -2,6 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 export default class OpenDb extends React.Component{
+
+    static contextTypes = {
+        router: React.PropTypes.object
+    }
+
     static propTypes = {            
         url: React.PropTypes.string,
         pw: React.PropTypes.string,
@@ -9,7 +14,7 @@ export default class OpenDb extends React.Component{
     }             
 
     static defaultProps = {         
-        url: 'http://localhost:9966/bluepass/index.php',
+        url: '',
         pw: '',
         onOpen: () => {}
     }       
@@ -17,6 +22,7 @@ export default class OpenDb extends React.Component{
     render() {
         return(
             <form action="" onSubmit={this.onSubmit.bind(this)}>
+                <h2>Open Database</h2>
                 <div className="bp-form-field">
                     <label>Database URL</label><br/>
                     <input defaultValue={this.props.url} ref={(ref) => this.openUrl = ref}/><br/>
@@ -38,6 +44,7 @@ export default class OpenDb extends React.Component{
 
         this.props.onOpen(dbUrl, dbPw);
 
+        this.context.router.push('home');
 
         return;
     }

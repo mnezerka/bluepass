@@ -1,18 +1,23 @@
 import {connect} from 'react-redux';
 import Items from 'components/Items';
+import {modifyItem, saveItem, deleteItem} from 'actions';
 
 const mapStateToProps = (state) => {
-    console.log('map state called', state);
     return {
         items: state.pdb.items
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
-    console.log('map dispatch called');
     return {
-        onToDoClick: (id) => {
-            dispatch(toggleTodo(id))
+        onModify: (item) => {
+            dispatch(modifyItem(item))
+        },
+        onSave: (item) => {
+            dispatch(saveItem(item))
+        },
+        onDelete: (item) => {
+            dispatch(deleteItem(item))
         }
     }
 }
