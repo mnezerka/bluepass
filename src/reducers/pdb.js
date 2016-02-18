@@ -1,8 +1,8 @@
 import {REQUEST_DB, RECEIVE_DB, POSTED_DB, META_DB, SAVE_ITEM, DELETE_ITEM, MODIFY_ITEM, CANCEL_ITEM} from 'actions';
 
 const INITIAL_STATE = {
-    url: '', 
-    pw: 'n/a',
+    url: 'db.php', 
+    pw: '',
     name: 'Empty database',
     items: [],
     modified: false,

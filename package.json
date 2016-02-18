@@ -24,8 +24,12 @@
     "babel-polyfill": "^6.5.0",
     "babel-register": "^6.5.1",
     "babel-runtime": "^6.5.0",
+    "del": "^2.2.0",
     "gulp": "^3.9.0",
+    "gulp-compress": "0.0.8",
+    "gulp-gzip": "^1.2.0",
     "gulp-util": "^3.0.6",
+    "run-sequence": "^1.1.5",
     "uglify-js": "~2.4.15",
     "webpack": "^1.12.1",
     "webpack-polyfills-plugin": "0.0.8"

@@ -1,14 +1,17 @@
 'use strict';
 
-var gulp = require("gulp");
-var gutil = require("gulp-util");
-var webpack = require("webpack");
+import gulp from 'gulp';
+import gutil from 'gulp-util';
+import del from 'del';
+import webpack from  'webpack';
 import path from 'path';
+import gzip from 'gulp-gzip';
+import runSequence from 'run-sequence';
 
 var webpackConfig = {
     entry: {
         app: [path.resolve(__dirname, './src/app.js')],
-        libs: ["react", "classnames"]
+        libs: ['react', 'classnames']
     },
     output: {
         path: path.resolve(__dirname, './build'),
@@ -33,30 +36,35 @@ var webpackConfig = {
 
 function onBuild(done) {
     return function(err, stats) {
-        if(err)
-             throw new gutil.PluginError("webpack:build-dev", err);
+        if(err) {
+            throw new gutil.PluginError('webpack:build-dev', err);
+        }
 
-        gutil.log("[webpack:build-dev]", stats.toString({
+        gutil.log('[webpack:build-dev]', stats.toString({
             colors: true
         }));
 
-        if (done)
+        if (done) {
             done();
+        }
     }
 }
 
 // The development server (the recommended option for development)
 gulp.task('default', ['watch']);
 
-gulp.task("build", function(done) {
+gulp.task('product', (callback) => {
+    runSequence('product:build', 'compress', callback);
+});
+
+gulp.task('product:build', ['clean'], function(done) {
     var buildWebpackConfig = Object.create(webpackConfig);
     buildWebpackConfig.plugins = [
-        //new webpack.optimize.CommonsChunkPlugin("init.js"),
-        //new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"libs", /* filename= */"libs.js"),
+        new webpack.optimize.CommonsChunkPlugin(/* chunkName= */'libs', /* filename= */'libs.js'),
         new webpack.optimize.DedupePlugin(),
+        new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.optimize.UglifyJsPlugin(),
-        //new webpack.optimize.OccurenceOrderPlugin(),
-        //new webpack.NoErrorsPlugin()
+        new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
                 'NODE_ENV': '"production"'
@@ -68,8 +76,18 @@ gulp.task("build", function(done) {
     webpackCompiler.run(onBuild(done));
 });
 
-gulp.task("watch", function(done) {
+gulp.task('watch', function() {
     var webpackCompiler = webpack(webpackConfig);
     webpackCompiler.watch(100, onBuild());
+});
+
+gulp.task('compress', () => {
+    return gulp.src(['./build/*.js', './build/*.css'])
+    .pipe(gzip())
+    .pipe(gulp.dest('./build'));
+});
+
+gulp.task('clean', (callback) => {
+    return del(['build'], callback);
 });
 
