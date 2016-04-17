@@ -1,39 +1,56 @@
 #!/usr/bin/env python
 
 import cgi
-#import cgitb
-import bottle
-#from bottle import route, response, hook
-from bottle import Bottle, route, request
-
+from flask import Flask
+from flask_jwt import JWT, jwt_required, current_identity
+from werkzeug.security import safe_str_cmp
 from wsgiref.handlers import CGIHandler
 
-#cgitb.enable()
 
-#@hook('after_request')
-#def enable_cors():
-#    response.headers['Access-Control-Allow-Origin'] = '*'
+class User(object):
+    def __init__(self, id, username, password):
+        self.id = id
+        self.username = username
+        self.password = password
 
-app = Bottle()
-app.catchall = False
+    def __str__(self):
+        return "User(id='%s')" % self.id
+
+users = [
+    User(1, 'joe', 'pass'),
+    User(2, 'joe2', 'pass2'),
+]
+
+username_table = {u.username: u for u in users}
+userid_table = {u.id: u for u in users}
+
+def authenticate(username, password):
+    user = username_table.get(username, None)
+    if user and safe_str_cmp(user.password.encode('utf-8'), password.encode('utf-8')):
+        return user
+
+def identity(payload):
+    user_id = payload['identity']
+    return userid_table.get(user_id, None)
+
+app = Flask(__name__)
+app.debug = True
+app.config['SECRET_KEY'] = 'super-secret'
+
+jwt = JWT(app, authenticate, identity)
 
 @app.route('/')
 def index():
-    return 'This is index'
+    return 'Bluepass API'
 
-@app.route('/hello/:name')
-def hello(name='World'):
-    return 'Hello %s (%s)' % (name, request.path)
+@app.route('/protected')
+@jwt_required()
+def protected():
+    return '%s' % current_identity
 
-@app.route('/auth/')
-def auth():
-    return 'This is auth'
-
-#print "Content-type: text/html\n\n"
-#print "<html><body>Hello</body</hello>"
 #cgi.print_environ()
 
 if __name__ == '__main__':
     #app.catchall = False
-    #CGIHandler().run(bottle.default_app())
+    #ckkCGIHandler().run(bottle.default_app())
     CGIHandler().run(app)
