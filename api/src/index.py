@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
 import cgi
-from flask import Flask
+from flask import Flask, url_for
 from flask_jwt import JWT, jwt_required, current_identity
 from werkzeug.security import safe_str_cmp
 from wsgiref.handlers import CGIHandler
-
 
 class User(object):
     def __init__(self, id, username, password):
@@ -50,7 +49,4 @@ def protected():
 
 #cgi.print_environ()
 
-if __name__ == '__main__':
-    #app.catchall = False
-    #ckkCGIHandler().run(bottle.default_app())
-    CGIHandler().run(app)
+CGIHandler().run(app)

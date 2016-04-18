@@ -11,10 +11,12 @@ RUN pip install flask Flask-JWT
 
 # Expose ports
 EXPOSE 80
+EXPOSE 2812
+COPY ./docker/monitrc /etc/monit/monitrc
+RUN chmod 0700 /etc/monit/monitrc
 
 VOLUME ["/var/www"]
 
 COPY ./docker/apache2.conf /etc/apache2/
 
-# Set the default command to execute when creating a new container
-ENTRYPOINT exec /usr/sbin/apache2ctl -DFOREGROUND
+ENTRYPOINT exec monit -I
