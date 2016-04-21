@@ -10,7 +10,7 @@ dockerStop= \
 
 dockerStart= \
 	echo "Starting docker ${1}"; \
-	docker run -d -p 80:80 -v "`pwd`/api":/var/www/html/api --name ${1} ${1}
+	docker run -d -p 80:80 -v "`pwd`/api/src":/var/www/html/api --name ${1} ${1}
 
 dockerRemove= \
 	echo "Removing docker ${1}"; \
@@ -34,5 +34,8 @@ api-stop:
 
 api-rm: api-stop
 	@$(call dockerRemove,bluepass-api)
+
+api-ip:
+	docker inspect --format '{{ .NetworkSettings.IPAddress}}' bluepass-api
 
 api: api-build api-run
