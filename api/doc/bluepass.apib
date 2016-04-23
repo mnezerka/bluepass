@@ -1,0 +1,59 @@
+FORMAT: 1A
+
+# BluePass API 
+
+# Group Authentication 
+
+# Authenticate user [/auth]
+
+## Authenticate user [POST]
+
++ Request (application/json)
+
+        {
+            "username": "joe",
+            "password": "pass"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "token": "JWT token string"
+        }
+
+
+# Group Database 
+
+# Databases [/db]
+
+# Fetch database
+
+## Get Database [GET]
+
++ Request
+    + Headers
+
+            Bearer: valid-jwt-token
+
++ Response 200 (application/json)
+
+        {
+            "data": "base64-encoded-encrypted-db-content"
+        }
+
+## Update Database [POST]
+
++ Request (application/json)
+
+    + Headers
+
+            Bearer: valid-jwt-token
+
+    + Body
+
+        {
+            "data": "base64-encoded-encrypted-db-content"
+        }
+
++ Response 200
+
