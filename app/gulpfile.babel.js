@@ -4,6 +4,7 @@ import gulp from 'gulp';
 import gutil from 'gulp-util';
 import del from 'del';
 import webpack from  'webpack';
+import WebpackDevServer from 'webpack-dev-server';
 import path from 'path';
 import gzip from 'gulp-gzip';
 import runSequence from 'run-sequence';
@@ -28,7 +29,7 @@ var webpackConfig = {
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                loaders: ['babel?stage=0']
+                loaders: ['babel-loader?cacheDirectory']
             }
         ]
     },
@@ -74,6 +75,20 @@ gulp.task('product:build', ['clean'], function(done) {
 
     var webpackCompiler = webpack(buildWebpackConfig);
     webpackCompiler.run(onBuild(done));
+});
+
+gulp.task("watch2", function(callback) {
+    // Start a webpack-dev-server
+    var compiler = webpack(webpackConfig);
+
+    new WebpackDevServer(compiler, {
+        // server and middleware options
+    }).listen(8080, "0.0.0.0", function(err) {
+        if(err) throw new gutil.PluginError("webpack-dev-server", err);
+        // Server listening
+        // keep the server alive or continue?
+        // callback();
+    });
 });
 
 gulp.task('watch', function() {
