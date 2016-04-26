@@ -44,7 +44,7 @@ app-build:
 	@$(call dockerBuild,bluepass-app,app)
 
 app-run:
-	@$(call dockerStart,bluepass-app,-p 8080:8080 -v "`pwd`/app":/app)
+	@$(call dockerStart,bluepass-app,-p 8081:8081 -v "`pwd`/app":/app)
 
 app-stop:
 	@$(call dockerStop,bluepass-app)

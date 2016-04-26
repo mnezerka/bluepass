@@ -1,6 +1,19 @@
 import React from 'react';
 import Header from 'containers/Header';
 import Menu from 'containers/Menu';
+import Navbar from 'react-bootstrap/lib/Navbar';
+import Nav from 'react-bootstrap/lib/Nav';
+import NavItem from 'react-bootstrap/lib/NavItem';
+import Tree from 'react-ui-tree';
+
+var treeData = {
+    label: 'ahoj',
+    children: [
+        { 
+            label: 'ahoj2'
+        }
+    ]
+} 
 
 export default class App extends React.Component{
 
@@ -19,9 +32,30 @@ export default class App extends React.Component{
         }
     }
 
+    renderNode() {
+        return (<div>ahoj</div>);
+    }
+
     render() {
         return (
             <div className="bp-container">
+                <Navbar fluid>
+                    <Navbar.Header>
+                        <Navbar.Brand>
+                            BluePass
+                        </Navbar.Brand>
+                    </Navbar.Header>
+                    <Nav>
+                        <NavItem>Dashboard</NavItem>
+                    </Nav>
+                </Navbar>
+
+                <Tree
+                    paddingLeft={20}
+                    tree={treeData}
+                    renderNode={this.renderNode}  // renderNode(node) return react element
+                />
+
                 <Header />
                 <Menu
                     onHome={this.onHome.bind(this)}
