@@ -1,8 +1,12 @@
 import {combineReducers} from 'redux'
-import pdb from './pdb'
+import {routerReducer} from 'react-router-redux';
+import Db from './Db'
+import Auth from './Auth';
 
 const pdbApp = combineReducers({
-    pdb
+    auth: Auth,
+    db: Db,
+    routing: routerReducer
 })
 
 export default pdbApp

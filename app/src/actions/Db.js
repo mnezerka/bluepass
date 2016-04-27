@@ -1,5 +1,4 @@
 import {CALL_API} from 'redux-api-middleware';
-import config from 'config_web_app';
 import querystring from 'querystring';
 import {logout} from 'actions/Auth';
 

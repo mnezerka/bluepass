@@ -8,6 +8,7 @@ import {requireAuthentication} from 'components/AuthenticatedComponent';
 const routes = ( 
     <Route path="/" component={App}>
         <IndexRoute component={requireAuthentication(MainPage)}/>
+        <Route path="login" component={LoginPage}/>
     </Route>
 );
 

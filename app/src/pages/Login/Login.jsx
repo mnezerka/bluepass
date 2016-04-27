@@ -1,8 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import Input from 'react-bootstrap/lib/Input';
-import ButtonInput from 'react-bootstrap/lib/ButtonInput';
+import Label from 'react-bootstrap/lib/ControlLabel';
+import FormControl from 'react-bootstrap/lib/FormControl';
+import FormGroup from 'react-bootstrap/lib/FormGroup';
+import HelpBlock from 'react-bootstrap/lib/HelpBlock';
+import Button from 'react-bootstrap/lib/Button';
 import PageHeader from 'react-bootstrap/lib/PageHeader';
 import Alert from 'react-bootstrap/lib/Alert';
 import * as actionCreators from 'actions/Auth';
@@ -36,21 +39,12 @@ export default class LoginPage extends React.Component {
         }
     }
 
-    validationState(ctrl) {
-        let value;
-        switch (ctrl) {
-        case 'login':
-            value = this.state.login;
-            break;
-        case 'password':
-            value = this.state.password;
-            break;
-        default:
-            return 'success';
+    getValidationState() {
+        if (this.state.login.length === 0) {
+            return 'warning';
         }
-
-        if (value.length === 0) {
-            return 'warning'; 
+        if (this.state.password.length === 0) {
+            return 'warning';
         }
 
         return 'success';
@@ -59,7 +53,7 @@ export default class LoginPage extends React.Component {
     render() {
         return (
             <div className="saas-login-form">
-                <PageHeader>Welcome to SaaSOps</PageHeader>
+                <PageHeader>Welcome to BluePass</PageHeader>
                 {this.props.isAuthenticating &&
                     <Alert bsStyle="info">Authenticating...</Alert>}        
 
@@ -70,26 +64,29 @@ export default class LoginPage extends React.Component {
                     <Alert bsStyle="info">{this.props.statusText}</Alert>}        
 
                 <form>
-                    <Input
-                        type="text"
-                        value={this.state.login}
-                        label="Login"
-                        onChange={this.onChange.bind(this, 'login')}
-                        bsStyle={this.validationState('login')}
-                        placeholder="Enter login" />
+                    <FormGroup
+                        validationState={this.getValidationState()}>
 
-                    <Input
-                        type="password"
-                        value={this.state.password}
-                        label="Password"
-                        onChange={this.onChange.bind(this, 'password')}
-                        bsStyle={this.validationState('password')}
-                        placeholder="Enter password" />
+                        <Label>Login</Label>
+                        <FormControl
+                            type="text"
+                            value={this.state.login}
+                            onChange={this.onChange.bind(this, 'login')}
+                            placeholder="Enter login" />
+                        <HelpBlock />
 
-                    <ButtonInput
+                        <Label>Password</Label>
+                        <FormControl
+                            type="password"
+                            value={this.state.password}
+                            onChange={this.onChange.bind(this, 'password')}
+                            placeholder="Enter password" />
+                    </FormGroup>
+
+                    <Button
                         type="submit"
-                        onClick={this.onLogin.bind(this)}
-                        value="Login" />
+                        onClick={this.onLogin.bind(this)}>
+                        Login</Button>
                 </form>
             </div>
        );

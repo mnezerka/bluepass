@@ -35,6 +35,9 @@ gulp.task('static', () => {
         .pipe(grename('index.html'))
         .pipe(gulp.dest('build/')); 
     gulp.src(['assets/**/*']).pipe(gulp.dest('build'));
+    gulp.src('config/config.dev.js')  
+        .pipe(grename('config.js'))
+        .pipe(gulp.dest('build/')); 
 });
 
 gulp.task('watch', ['static'], function() {

@@ -1,21 +1,20 @@
 import {CALL_API} from 'redux-api-middleware';
-import config from 'config_web_app';
 import {push} from 'react-router-redux';
 
 export const LOGIN_USER_REQUEST = 'LOGIN_USER_REQUEST';
 export const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
 export const LOGIN_USER_FAIL = 'LOGIN_USER_FAIL';
 
-export function loginUser(login, password, redirect='/') {
+export function loginUser(username, password, redirect='/') {
     return (dispatch) => {
         dispatch({[CALL_API]: {
-            endpoint: config.api + 'api-token-auth/',
+            endpoint: config.api + '/auth',
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({username: login, password}),
+            body: JSON.stringify({username, password}),
             credentials: 'include',
             types: [
                 LOGIN_USER_REQUEST,
@@ -52,39 +51,3 @@ export function logout() {
         error: false
     }
 }
-
-/* COMMENTED TO BE REUSED LATER - LOGIC FOR PROCESSING OF ERRORS
-export function loginUser(login, password, redirect="/") {
-    return function(dispatch) {
-        dispatch(loginUserRequest());
-        return fetch(config.api + 'api-token-auth/', {
-            method: 'post',
-            credentials: 'include',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-               body: JSON.stringify({username: login, password})
-            })
-            .then(checkHttpStatus)
-            .then(parseJSON)
-            .then(response => {
-                try {
-                    let decoded = jwtDecode(response.token);
-                    dispatch(loginUserSuccess(response.token));
-                    dispatch(push(redirect));
-                } catch (e) {
-                    dispatch(loginUserFailure({
-                        response: {
-                            status: 403,
-                            statusText: 'Invalid token'
-                        }
-                    }));
-                }
-            })
-            .catch(error => {
-                dispatch(loginUserFailure(error));
-            })
-    }
-}
-*/

@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import thunkMiddleware from 'redux-thunk';
+import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 import {createStore, applyMiddleware} from 'redux';
-import App from 'components/App';
 import {Router, browserHistory} from 'react-router';
-
+import {syncHistoryWithStore, routerMiddleware} from 'react-router-redux';
+import {apiMiddleware} from 'redux-api-middleware';
+import {loginUserSuccess} from 'actions/Auth';
 /*
 import Home from 'components/Home';
 import Opener from 'containers/Opener';
@@ -30,8 +31,8 @@ const routingMiddleware = routerMiddleware(browserHistory);
 const store = createStore(
     rootReducer,
     window.__INITIAL_STATE__,
-    //applyMiddleware(apiMiddleware, thunk, routingMiddleware, logger)
-    applyMiddleware(apiMiddleware, thunk, routingMiddleware)
+    applyMiddleware(apiMiddleware, thunk, routingMiddleware, logger)
+    //applyMiddleware(apiMiddleware, thunk, routingMiddleware)
 );
 
 // authentication stuff

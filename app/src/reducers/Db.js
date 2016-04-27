@@ -1,17 +1,15 @@
 import {createReducer} from 'utils';
+/*
 import {GATEWAYS_FETCH_DATA, GATEWAYS_FETCH_DATA_SUCCESS} from 'actions/Gateways';
-
+*/
 const initialState = {
     data: null,
-    sortField: 'id',
-    sortAsc: true,
-    isFetching: false,
-    pageSize: 50,
-    page: 1,
-    total: 0
+    isFetching: false
 };
 
+
 export default createReducer(initialState, {
+    /*
     [GATEWAYS_FETCH_DATA]: (state) => {
         return Object.assign({}, state, {
             isFetching: true
@@ -29,4 +27,5 @@ export default createReducer(initialState, {
             isFetching: false
         });
     },
+    */
 });
