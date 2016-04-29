@@ -1,70 +1,45 @@
 import {CALL_API} from 'redux-api-middleware';
-import querystring from 'querystring';
 import {logout} from 'actions/Auth';
 
-export const GATEWAYS_FETCH_DATA = 'GATEWAYS_FETCH_DATA';
-export const GATEWAYS_FETCH_DATA_SUCCESS = 'GATEWAYS_FETCH_DATA_SUCCESS';
-export const GATEWAYS_FETCH_DATA_FAIL = 'GATEWAYS_FETCH_DATA_FAIL';
+export const DB_FETCH = 'DB_FETCH';
+export const DB_FETCH_SUCCESS = 'DB_FETCH_SUCCESS';
+export const DB_FETCH_FAIL = 'DB_FETCH_FAIL';
 
-export const GATEWAYS_DSHB_FETCH_DATA = 'GATEWAYS_DSHB_FETCH_DATA';
-export const GATEWAYS_DSHB_FETCH_DATA_SUCCESS = 'GATEWAYS_DSHB_FETCH_DATA_SUCCESS';
-export const GATEWAYS_DSHB_FETCH_DATA_FAIL = 'GATEWAYS_DSHB_FETCH_DATA_FAIL';
-
-export function fetchGateways(sortField='id', sortAsc=true, pageSize=50, page=1) {
-    return fetchGatewaysData(
-        sortField,
-        sortAsc,
-        GATEWAYS_FETCH_DATA,
-        GATEWAYS_FETCH_DATA_SUCCESS,
-        GATEWAYS_FETCH_DATA_FAIL,
-        pageSize,
-        page);
-}
-
-export function fetchGatewaysDashboard(sortField='id', sortAsc=true, pageSize=10, page=1) {
-    return fetchGatewaysData(
-        sortField,
-        sortAsc,
-        GATEWAYS_DSHB_FETCH_DATA,
-        GATEWAYS_DSHB_FETCH_DATA_SUCCESS,
-        GATEWAYS_DSHB_FETCH_DATA_FAIL,
-        pageSize,
-        page);
-}
-
-function fetchGatewaysData(sortField='id', sortAsc=true, actFetch, actSuccess, actFail, pageSize=null, page=null) {
+export function fetchDb() {
     return (dispatch, state) => {
         let token = state().auth.token;
 
-        let urlParams = {
-            ordering: `${sortAsc ? '' : '-'}${sortField}`
-        };
-
-        if (pageSize !== null) {
-            urlParams.page_size = pageSize;
-        }
-
-        if (page !== null) {
-            urlParams.page = page;
-        }
-
         dispatch({[CALL_API]: {
-            endpoint: config.api + 'gateways/?' + querystring.stringify(urlParams),
+            endpoint: config.api + '/db',
             method: 'GET',
-            headers: {Authorization: 'Bearer ' + token},
+            headers: {Authorization: 'BP ' + token},
             types: [
-                actFetch,
-                {
-                    type: actSuccess,
-                    meta: { sortField, sortAsc, pageSize}
-                },
-                actFail 
+                DB_FETCH,
+                DB_FETCH_SUCCESS,
+                DB_FETCH_FAIL,
             ]
         }}).then((action) => {
             // handle automatic logout on token expiration
-            if (action.type === actFail && action.payload.status === 403) {
+            if (action.type === DB_FETCH_FAIL && action.payload.status === 403) {
                 dispatch(logout());
             }
         });
     }
 }
+
+export const DB_AUTH_SUCCESS = 'DB_AUTH_SUCCESS';
+export const DB_AUTH_FAIL = 'DB_AUTH_FAIL';
+
+export function authenticateDb(password) {
+    return (dispatch, getState) => {
+        if (getState().db.data == '') {
+            dispatch({
+                type: DB_AUTH_SUCCESS,
+                payload: {password}
+            });
+        }
+
+    }
+
+}
+

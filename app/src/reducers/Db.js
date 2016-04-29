@@ -1,31 +1,33 @@
 import {createReducer} from 'utils';
-/*
-import {GATEWAYS_FETCH_DATA, GATEWAYS_FETCH_DATA_SUCCESS} from 'actions/Gateways';
-*/
+import {DB_FETCH, DB_FETCH_SUCCESS, DB_AUTH_SUCCESS} from 'actions/Db';
+
 const initialState = {
     data: null,
-    isFetching: false
+    isFetching: false,
+    isDecrypted: false,
+    password: null
 };
 
 
 export default createReducer(initialState, {
-    /*
-    [GATEWAYS_FETCH_DATA]: (state) => {
+    [DB_FETCH]: (state) => {
         return Object.assign({}, state, {
             isFetching: true
         });
     },
 
-    [GATEWAYS_FETCH_DATA_SUCCESS]: (state, payload, meta) => {
+    [DB_FETCH_SUCCESS]: (state, payload) => {
         return Object.assign({}, state, {
-            data: payload.results,
-            sortField: meta.sortField,
-            sortAsc: meta.sortAsc,
-            pageSize: meta.pageSize,
-            page: payload.page,
-            total: payload.count,
+            data: payload.data,
             isFetching: false
         });
     },
-    */
+
+    [DB_AUTH_SUCCESS]: (state, payload) => {
+        return Object.assign({}, state, {
+            isDecrypted: true,
+            password: payload.password
+        });
+    },
+
 });

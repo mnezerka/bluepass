@@ -5,17 +5,19 @@ import Navbar from 'react-bootstrap/lib/Navbar';
 import Nav from 'react-bootstrap/lib/Nav';
 import NavItem from 'react-bootstrap/lib/NavItem';
 import {bindActionCreators} from 'redux';
-import * as actionCreators from 'actions/Auth';
+import * as actionCreatorsAuth from 'actions/Auth';
+import * as actionCreatorsDb from 'actions/Db';
+import AuthModal from 'components/AuthModal';
 
 const mapStateToProps = (state) => ({
-    isAuthenticating   : state.auth.isAuthenticating,
     isAuthenticated    : state.auth.isAuthenticated,
-    statusText         : state.auth.statusText,
-    userName           : state.auth.userName
+    userName           : state.auth.userName,
+    db                 : state.db
 });
 
 const mapActionsToProps = (dispatch) => ({
-        actions : bindActionCreators(actionCreators, dispatch)
+        actionsAuth : bindActionCreators(actionCreatorsAuth, dispatch),
+        actionsDb : bindActionCreators(actionCreatorsDb, dispatch)
 });
 
 @connect(mapStateToProps, mapActionsToProps)
@@ -29,7 +31,8 @@ export default class App extends React.Component{
         isAuthenticated: React.PropTypes.bool,
         userName: React.PropTypes.string,
         children: React.PropTypes.object,
-        actions: React.PropTypes.object
+        actionsAuth: React.PropTypes.object,
+        actionsDb: React.PropTypes.object
     }
 
     render() {
@@ -63,6 +66,10 @@ export default class App extends React.Component{
                 <div className="bp-content">
                     {this.props.children}
                 </div>
+
+                <AuthModal
+                    show={!this.props.db.isDecrypted}
+                    onAuthenticate={this.onAuthenticate.bind(this)}/>
             </div>
         )
     }
@@ -72,7 +79,11 @@ export default class App extends React.Component{
     }
 
     onLogout() {
-        this.props.actions.logout();
+        this.props.actionsAuth.logout();
+    }
+
+    onAuthenticate(password) {
+        this.props.actionsDb.authenticateDb(password);
     }
 
 }

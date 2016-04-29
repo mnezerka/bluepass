@@ -28,6 +28,10 @@ export default class MainPage extends React.Component {
         actions: React.PropTypes.object
     }
 
+    componentWillMount() {
+        this.props.actions.fetchDb();
+    }
+
     renderNode() {
         return (<div>ahoj</div>);
     }

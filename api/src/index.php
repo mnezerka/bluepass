@@ -67,10 +67,17 @@ function getToken($userName, $secret) {
 }
 
 function validateToken($token, $secret) {
+    global $BLUEPASS_USERS;
+
     $parts = explode('.', $token);
     if (count($parts) != 2) return false; 
     $sign = md5($secret . $parts[0]);
     if ($sign != $parts[1]) return false;
+
+    $data = getTokenData($token);
+    if (!property_exists($data, 'username')) return false;
+    if (!in_array($data->username, $BLUEPASS_USERS)) return false;
+
     return true;
 }
 
@@ -81,10 +88,10 @@ function getTokenData($token) {
 }
 
 function getRequestToken() {
-    $headers = apache_request_headers();
-    if(isset($headers['Authorization'])) {
+    $headers = array_change_key_case(apache_request_headers(), CASE_LOWER);
+    if(isset($headers['authorization'])) {
         $matches = array();
-        preg_match('/BP (.*)/', $headers['Authorization'], $matches);
+        preg_match('/BP (.*)/', $headers['authorization'], $matches);
         if(isset($matches[1])) {
             $token = $matches[1];
             return $token;
@@ -127,6 +134,7 @@ function handleOptions() {
 
 function handlePost($ep) {
     global $BLUEPASS_SECRET;
+    global $BLUEPASS_USERS;
 
     switch ($ep) {
 
@@ -136,6 +144,15 @@ function handlePost($ep) {
             if (!isset($data->username) || !isset($data->password)) {
                 onError400('missing username or password');
             };
+
+            if (!in_array($data->username, $BLUEPASS_USERS)) {
+                onError403('unknown user');
+            };
+
+            if ($data->password !== $BLUEPASS_SECRET) {
+                onError403('invalid password');
+            };
+
             $token = getToken($data->username, $BLUEPASS_SECRET);
             $response = array(
                 'token' => $token
