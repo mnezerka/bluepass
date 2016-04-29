@@ -2,30 +2,10 @@
 
 import gulp from 'gulp';
 import grename from 'gulp-rename';
-import gutil from 'gulp-util';
 import del from 'del';
 import webpack from  'webpack';
 import WebpackDevServer from 'webpack-dev-server';
-import path from 'path';
-import gzip from 'gulp-gzip';
-import runSequence from 'run-sequence';
 import webpackDevConfig from './config/webpack.dev.js';
-
-function onBuild(done) {
-    return function(err, stats) {
-        if(err) {
-            throw new gutil.PluginError('webpack:build-dev', err);
-        }
-
-        gutil.log('[webpack:build-dev]', stats.toString({
-            colors: true
-        }));
-
-        if (done) {
-            done();
-        }
-    }
-}
 
 // The development server (the recommended option for development)
 gulp.task('default', ['watch']);

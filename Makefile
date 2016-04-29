@@ -27,7 +27,7 @@ api-build:
 	@$(call dockerBuild,bluepass-api,api)
 
 api-run:
-	@$(call dockerStart,bluepass-api,-p 80:80 -v "`pwd`/api/src":/var/www/html/api)
+	@$(call dockerStart,bluepass-api,-p 9060:80 -v "`pwd`/api/src":/var/www/html/api)
 
 api-stop:
 	@$(call dockerStop,bluepass-api)
@@ -44,7 +44,7 @@ app-build:
 	@$(call dockerBuild,bluepass-app,app)
 
 app-run:
-	@$(call dockerStart,bluepass-app,-p 8081:8081 -v "`pwd`/app":/app)
+	@$(call dockerStart,bluepass-app,-p 9061:8081 -v "`pwd`/app":/app)
 
 app-stop:
 	@$(call dockerStop,bluepass-app)

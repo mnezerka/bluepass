@@ -4,7 +4,7 @@ import {DB_FETCH, DB_FETCH_SUCCESS, DB_AUTH_SUCCESS} from 'actions/Db';
 const initialState = {
     data: null,
     isFetching: false,
-    isDecrypted: false,
+    isDecrypted: true,
     password: null
 };
 

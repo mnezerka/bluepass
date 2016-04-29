@@ -7,7 +7,6 @@ import NavItem from 'react-bootstrap/lib/NavItem';
 import {bindActionCreators} from 'redux';
 import * as actionCreatorsAuth from 'actions/Auth';
 import * as actionCreatorsDb from 'actions/Db';
-import AuthModal from 'components/AuthModal';
 
 const mapStateToProps = (state) => ({
     isAuthenticated    : state.auth.isAuthenticated,
@@ -16,8 +15,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapActionsToProps = (dispatch) => ({
-        actionsAuth : bindActionCreators(actionCreatorsAuth, dispatch),
-        actionsDb : bindActionCreators(actionCreatorsDb, dispatch)
+    actionsAuth : bindActionCreators(actionCreatorsAuth, dispatch),
+    actionsDb : bindActionCreators(actionCreatorsDb, dispatch)
 });
 
 @connect(mapStateToProps, mapActionsToProps)
@@ -27,7 +26,7 @@ export default class App extends React.Component{
         router: React.PropTypes.object
     }
 
-   static propTypes = {
+    static propTypes = {
         isAuthenticated: React.PropTypes.bool,
         userName: React.PropTypes.string,
         children: React.PropTypes.object,
@@ -63,13 +62,10 @@ export default class App extends React.Component{
                 </Navbar>
 
     
-                <div className="bp-content">
+                <div className="container-fluid bp-content">
                     {this.props.children}
                 </div>
 
-                <AuthModal
-                    show={!this.props.db.isDecrypted}
-                    onAuthenticate={this.onAuthenticate.bind(this)}/>
             </div>
         )
     }
@@ -82,8 +78,5 @@ export default class App extends React.Component{
         this.props.actionsAuth.logout();
     }
 
-    onAuthenticate(password) {
-        this.props.actionsDb.authenticateDb(password);
-    }
 
 }

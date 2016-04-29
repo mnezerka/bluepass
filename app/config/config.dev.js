@@ -1,4 +1,4 @@
 
 var config = {
-    "api": "http://localhost/api" 
+    "api": "http://localhost:9060/api" 
 }
