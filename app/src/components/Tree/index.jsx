@@ -14,9 +14,9 @@ export default class Tree  extends React.Component{
     renderItem(item) {
         return (
             <ListGroupItem
-                header={item.label}
+                key={item.name}
                 onClick={this.onItemClick.bind(this, item)}>
-                {item.label}
+                {item.name}
             </ListGroupItem>
         );
     }
