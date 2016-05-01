@@ -23,7 +23,7 @@ function dbLoad($userName) {
     if (!file_exists($filePath)) {
         return '';
     } else  {
-        file_get_contents($filePath);
+        return file_get_contents($filePath);
     }
 }
 
@@ -140,7 +140,6 @@ function handlePost($ep) {
 
         case 'auth':
             $data = json_decode(file_get_contents('php://input'));
-            //var_dump($data);
             if (!isset($data->username) || !isset($data->password)) {
                 onError400('missing username or password');
             };

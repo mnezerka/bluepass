@@ -34,7 +34,14 @@ export default createReducer(initialState, {
 
     [DB_LOCK]: (state) => {
         return Object.assign({}, state, {
-            isLocked: true
+            isLocked: true,
+        });
+    },
+
+
+    [DB_LOCK_SUCCESS]: (state, payload, meta) => {
+        return Object.assign({}, state, {
+            dataRaw: meta.dataRaw
         });
     },
 

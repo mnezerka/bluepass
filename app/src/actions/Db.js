@@ -1,3 +1,4 @@
+import CryptoJS from 'crypto-js';
 import {CALL_API} from 'redux-api-middleware';
 import {logout} from 'actions/Auth';
 import {Base64} from 'js-base64';
@@ -23,6 +24,8 @@ export function fetchDb() {
             // handle automatic logout on token expiration
             if (action.type === DB_FETCH_FAIL && action.payload.status === 403) {
                 dispatch(logout());
+            } else {
+                dispatch(unlockDb('michal'));
             }
         });
     }
@@ -33,27 +36,42 @@ export const DB_UNLOCK_FAIL = 'DB_UNLOCK_FAIL';
 
 export function unlockDb(password) {
     return (dispatch, getState) => {
+        console.log(getState());
+        if (getState().db.dataRaw === null) {
+           return;
+        }
+
         if (getState().db.dataRaw == '') {
             dispatch({
                 type: DB_UNLOCK_SUCCESS,
                 payload: {password, data: []}
             });
         } else {
-            // TODO: try to decrypt data using password
+            let dataEncrypted = Base64.decode(getState().db.dataRaw)
+            let dataDecrypted = CryptoJS.AES.decrypt(dataEncrypted, password);
+            let dataStr = dataDecrypted.toString(CryptoJS.enc.Utf8)
+            let data = JSON.parse(dataStr);
+
+            dispatch({
+                type: DB_UNLOCK_SUCCESS,
+                payload: {password, data}
+            });
         }
-
     }
-
 }
 
 export const DB_LOCK = 'DB_LOCK';
 export const DB_LOCK_SUCCESS = 'DB_LOCK_SUCCESS';
 export const DB_LOCK_FAIL = 'DB_LOCK_FAIL';
 
+// JSON -> string -> encrypt -> base64 -> JSON.data
 export function lockDb() {
     return (dispatch, getState) => {
         let token = getState().auth.token;
-        let body = JSON.stringify({data: Base64.encode(getState().db.data)});
+        let dataStr = JSON.stringify(getState().db.data);
+        let dataEncrypted = CryptoJS.AES.encrypt(dataStr, getState().db.password);
+        let dataRaw = Base64.encode(dataEncrypted);
+        let body = JSON.stringify({data: dataRaw});
 
         dispatch({[CALL_API]: {
             endpoint: config.api + '/db',
@@ -67,7 +85,10 @@ export function lockDb() {
             credentials: 'include',
             types: [
                 DB_LOCK,
-                DB_LOCK_SUCCESS,
+                {
+                    type: DB_LOCK_SUCCESS,
+                    meta: {dataRaw}
+                },
                 DB_LOCK_FAIL,
             ]
         }}).then((action) => {

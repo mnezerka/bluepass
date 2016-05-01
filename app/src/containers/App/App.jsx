@@ -1,6 +1,5 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import Menu from 'containers/Menu';
 import Navbar from 'react-bootstrap/lib/Navbar';
 import Nav from 'react-bootstrap/lib/Nav';
 import NavItem from 'react-bootstrap/lib/NavItem';

@@ -8,24 +8,13 @@ import {Router, browserHistory} from 'react-router';
 import {syncHistoryWithStore, routerMiddleware} from 'react-router-redux';
 import {apiMiddleware} from 'redux-api-middleware';
 import {loginUserSuccess} from 'actions/Auth';
-/*
-import Home from 'components/Home';
-import Opener from 'containers/Opener';
-import Meta from 'containers/Meta';
-import {hashHistory} from 'react-router'
-import pdb from 'reducers';
-*/
-
+import {unlockDb} from 'actions/Db';
 import rootReducer from 'reducers';
 import routes from './routes';
 
 const logger = createLogger();
 
-// create routing middleware
 const routingMiddleware = routerMiddleware(browserHistory);
-
-// create routing middleware
-//const routingMiddleware = routerMiddleware(browserHistory);
 
 // Add the reducer to your store on the `routing` key
 const store = createStore(
@@ -49,36 +38,3 @@ ReactDOM.render((
         <Router history={history}>{routes}</Router>
     </Provider>
 ), document.getElementById('app'))
-
-
-
-/*
-const store = createStore(
-    pdb,
-    applyMiddleware(
-        thunkMiddleware, // lets us dispatch() functions
-        loggerMiddleware // neat middleware that logs actions
-    )
-);*/
-
-//store.dispatch(selectSubreddit('reactjs'))
-/*store.dispatch(fetchPosts('reactjs')).then(() =>
-    console.log(store.getState())
-)
-*/
-
-/*/
-ReactDOM.render((
-    <Provider store={store}>
-        <Router history={hashHistory}>
-            <Route path="/" component={App}>         
-                <IndexRoute component={Home} /> 
-                <Route path="home" component={Home} /> 
-                <Route path="open" component={Opener}/>
-                <Route path="meta" component={Meta} /> 
-            </Route>
-        </Router>
-    </Provider>
-), document.getElementById('app'))
-*/
-

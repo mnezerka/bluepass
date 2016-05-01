@@ -2,14 +2,18 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actionCreators from 'actions/Db';
-import Tree from 'components/Tree';
+import ItemsTable from 'components/ItemsTable';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import Button from 'react-bootstrap/lib/Button';
+import Nav from 'react-bootstrap/lib/Nav';
+import NavItem from 'react-bootstrap/lib/NavItem';
+import Panel from 'react-bootstrap/lib/Panel';
 import AuthModal from 'components/AuthModal';
 import ItemModal from 'components/ItemModal';
+import './Main.styl';
 
 const mapStateToProps = (state) => ({
     db: state.db
@@ -31,7 +35,9 @@ export default class MainPage extends React.Component {
         super(props);
         this.state = {
             isAuthenticating: false,
-            isAddingItem: false
+            isAddingItem: false,
+            item: null,
+            itemAction: null
         }
     }
 
@@ -39,58 +45,47 @@ export default class MainPage extends React.Component {
         this.props.actions.fetchDb();
     }
 
-    renderNode() {
-        return (<div>ahoj</div>);
-    }
-
     render() {
         return (
             <div className="bp-page bp-page-main">
                 <h1></h1>
-                <Grid>
-                    <Row>
-                        <Col>
-                            {this.props.db.isLocked&& 
-                                <Button onClick={this.onUnlock.bind(this)}>
-                                    <Glyphicon glyph="lock" />
-                                    Unlock
-                                </Button>
-                            }
-                            {!this.props.db.isLocked && 
-                                <Button onClick={this.onLock.bind(this)}>
-                                    <Glyphicon glyph="lock" />
-                                    Lock 
-                                </Button>
-                            }
-                            {!this.props.db.isLocked && 
-                                <Button onClick={this.onAddItem.bind(this)}>Add Item</Button>
-                            }
-                        </Col>
-                    </Row> 
-                    <Row>
-                        <Col sm={6} md={3}>
-                            {!this.props.db.isLocked && 
-                                <Tree
-                                    items={this.props.db.data}
-                                    onSelect={this.onSelectTreeItem.bind(this)}  // renderNode(node) return react element
-                                />
-                            }
-                        </Col>
-                        <Col sm={6} md={3}>
-                            Content
-                        </Col>
-                    </Row>
-                </Grid>
+                <div className="bp-main-content">
+                    <div className="bp-menu">
+                        <Nav bsStyle="pills" stacked activeKey={1} onSelect={this.onAction.bind(this)}>
+
+                        {this.props.db.isLocked && 
+                            <NavItem eventKey="unlock">
+                                <Glyphicon glyph="lock"/>Unlock
+                            </NavItem>
+
+                        }
+                        {!this.props.db.isLocked && 
+                            <NavItem eventKey="lock">
+                                <Glyphicon glyph="lock"/>Lock
+                            </NavItem>
+                        }
+                        <NavItem eventKey="add" disabled={this.props.isLocked}>Add Item</NavItem>
+                        </Nav>
+                    </div>
+                    <div className="bp-items">
+                        {!this.props.db.isLocked && 
+                            <ItemsTable
+                                items={this.props.db.data}
+                                onEdit={this.onEditTreeItem.bind(this)}
+                            />
+                        }
+                    </div>
+                </div>
 
                 <AuthModal
                     show={this.state.isAuthenticating}
                     onAuthenticate={this.onAuthenticate.bind(this)}/>
 
                 <ItemModal
-                    show={this.state.isAddingItem}
+                    show={this.state.itemAction === 'add' || this.state.itemAction === 'edit'}
+                    item={this.state.item}
                     onCancel={this.onCancelItem.bind(this)}
                     onSave={this.onSaveItem.bind(this)}/>
-
             </div>
        );
     }
@@ -100,31 +95,48 @@ export default class MainPage extends React.Component {
         this.props.actions.unlockDb(password);
     }
 
-    onUnlock() {
-        this.setState({isAuthenticating: true});
+    onAction(action) {
+        console.log('action', action);
+        switch(action) {
+            case 'lock':
+                this.props.actions.lockDb();
+                break;
+            case 'unlock':
+                this.setState({isAuthenticating: true});
+                break;
+            case 'add':
+                this.setState({item: null, itemAction: 'add'});
+                break;
+        }
     }
 
-    onLock() {
-        this.props.actions.lockDb();
-    }
-
-    onSelectTreeItem(item) {
-        console.log(item);
-    }
-
-    onAddItem() {
-        this.setState({isAddingItem: true});
+    onEditTreeItem(item) {
+        this.setState({
+            item,
+            itemAction: 'edit'
+        });
     }
 
     onSaveItem(item) {
-        this.setState({isAddingItem: false});
+        this.setState({itemAction: null});
         this.props.actions.addItem(item);
     }
 
     onCancelItem() {
-        this.setState({isAddingItem: false});
+        this.setState({itemAction: null});
     }
 
 }
 
+class Item extends React.Component {
+    render() {
+        return (
+            <Panel header="Item">
+                <div>Name: {this.props.children.name}</div>
+                <div>Address: {this.props.children.address}</div>
+                <div>Secret: {this.props.children.secret}</div>
+            </Panel>
+        );
+    }
+}
 

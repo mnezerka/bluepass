@@ -9,6 +9,9 @@ import HelpBlock from 'react-bootstrap/lib/HelpBlock';
 export default class ItemModal extends React.Component{
 
     static propTypes = {
+        name: React.PropTypes.string,
+        address: React.PropTypes.string,
+        secret: React.PropTypes.string,
         show: React.PropTypes.bool,
         onSave: React.PropTypes.func,
         onCancel: React.PropTypes.func
@@ -18,17 +21,43 @@ export default class ItemModal extends React.Component{
         super(props);
         this.state = {
             name: '',
-            address: '',
-            secret: ''
+            address: '', 
+            secret: '' 
         }
     }
+
+    /*
+    componentWillMount() {
+        console.log(this.props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.updateItem(nextProps);
+    }
+
+    updateItem(props) {
+        if (props.item !== undefined && props.item !== null) {
+            this.setState({
+                name: props.item.name,
+                address: props.item.address,
+                secret: props.item.secret
+            });
+        } else {
+            this.setState({
+                name: '',
+                address: '', 
+                secret: '' 
+            });
+        }
+    }
+    */
 
     render() {
 
         return (
             <Modal show={this.props.show} onHide={this.props.onCancel}>
                 <Modal.Header>
-                    <Modal.Title>Database Authentication</Modal.Title>
+                    <Modal.Title>BluePass Item</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Label>Name</Label>
