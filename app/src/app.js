@@ -8,7 +8,6 @@ import {Router, browserHistory} from 'react-router';
 import {syncHistoryWithStore, routerMiddleware} from 'react-router-redux';
 import {apiMiddleware} from 'redux-api-middleware';
 import {loginUserSuccess} from 'actions/Auth';
-import {unlockDb} from 'actions/Db';
 import rootReducer from 'reducers';
 import routes from './routes';
 

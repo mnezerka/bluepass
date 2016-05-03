@@ -4,13 +4,8 @@ import {bindActionCreators} from 'redux';
 import * as actionCreators from 'actions/Db';
 import ItemsTable from 'components/ItemsTable';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
-import Grid from 'react-bootstrap/lib/Grid';
-import Row from 'react-bootstrap/lib/Row';
-import Col from 'react-bootstrap/lib/Col';
-import Button from 'react-bootstrap/lib/Button';
 import Nav from 'react-bootstrap/lib/Nav';
 import NavItem from 'react-bootstrap/lib/NavItem';
-import Panel from 'react-bootstrap/lib/Panel';
 import AuthModal from 'components/AuthModal';
 import ItemModal from 'components/ItemModal';
 import './Main.styl';
@@ -35,7 +30,6 @@ export default class MainPage extends React.Component {
         super(props);
         this.state = {
             isAuthenticating: false,
-            isAddingItem: false,
             item: null,
             itemAction: null
         }
@@ -48,7 +42,6 @@ export default class MainPage extends React.Component {
     render() {
         return (
             <div className="bp-page bp-page-main">
-                <h1></h1>
                 <div className="bp-main-content">
                     <div className="bp-menu">
                         <Nav bsStyle="pills" stacked activeKey={1} onSelect={this.onAction.bind(this)}>
@@ -64,14 +57,16 @@ export default class MainPage extends React.Component {
                                 <Glyphicon glyph="lock"/>Lock
                             </NavItem>
                         }
-                        <NavItem eventKey="add" disabled={this.props.isLocked}>Add Item</NavItem>
+                            <NavItem eventKey="add" disabled={this.props.db.isLocked}>
+                                <Glyphicon glyph="plus"/>Add Item
+                            </NavItem>
                         </Nav>
                     </div>
                     <div className="bp-items">
                         {!this.props.db.isLocked && 
                             <ItemsTable
                                 items={this.props.db.data}
-                                onEdit={this.onEditTreeItem.bind(this)}
+                                onEdit={this.onEditItem.bind(this)}
                             />
                         }
                     </div>
@@ -96,21 +91,20 @@ export default class MainPage extends React.Component {
     }
 
     onAction(action) {
-        console.log('action', action);
         switch(action) {
-            case 'lock':
-                this.props.actions.lockDb();
-                break;
-            case 'unlock':
-                this.setState({isAuthenticating: true});
-                break;
-            case 'add':
-                this.setState({item: null, itemAction: 'add'});
-                break;
+        case 'lock':
+            this.props.actions.lockDb();
+            break;
+        case 'unlock':
+            this.setState({isAuthenticating: true});
+            break;
+        case 'add':
+            this.setState({item: null, itemAction: 'add'});
+            break;
         }
     }
 
-    onEditTreeItem(item) {
+    onEditItem(item) {
         this.setState({
             item,
             itemAction: 'edit'
@@ -118,8 +112,9 @@ export default class MainPage extends React.Component {
     }
 
     onSaveItem(item) {
+        console.log('item to save', item);
         this.setState({itemAction: null});
-        this.props.actions.addItem(item);
+        this.props.actions.saveItem(item);
     }
 
     onCancelItem() {
@@ -127,16 +122,3 @@ export default class MainPage extends React.Component {
     }
 
 }
-
-class Item extends React.Component {
-    render() {
-        return (
-            <Panel header="Item">
-                <div>Name: {this.props.children.name}</div>
-                <div>Address: {this.props.children.address}</div>
-                <div>Secret: {this.props.children.secret}</div>
-            </Panel>
-        );
-    }
-}
-

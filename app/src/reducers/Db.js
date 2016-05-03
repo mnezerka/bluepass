@@ -1,5 +1,5 @@
 import {createReducer} from 'utils';
-import {DB_FETCH, DB_FETCH_SUCCESS, DB_UNLOCK_SUCCESS, DB_LOCK, DB_LOCK_SUCCESS, DB_ADD_ITEM} from 'actions/Db';
+import {DB_FETCH, DB_FETCH_SUCCESS, DB_UNLOCK_SUCCESS, DB_LOCK, DB_LOCK_SUCCESS, DB_SAVE_ITEM} from 'actions/Db';
 import {LOGOUT_USER} from 'actions/Auth';
 
 const initialState = {
@@ -45,16 +45,28 @@ export default createReducer(initialState, {
         });
     },
 
-    [DB_ADD_ITEM]: (state, payload) => {
+    [DB_SAVE_ITEM]: (state, payload) => {
         let newData = state.data.slice()
-        newData.push(payload);
-        console.log(state.data, state.data.slice(), newData);
+        // check if item exists
+        let itemPos = null;
+        for (let i = 0; i < newData.length; i++) {
+            if (payload.id === newData[i].id) {
+                itemPos = i;
+                break;
+            }
+        }
+        if (itemPos !== null) {
+            newData[itemPos] = payload;
+        } else {
+            newData.push(payload);
+        }
+        //console.log(state.data, state.data.slice(), newData);
         return Object.assign({}, state, {
             data: newData
         });
     },
 
-    [LOGOUT_USER]: (state, payload) => {
+    [LOGOUT_USER]: (state) => {
         return Object.assign({}, state, initialState);
     },
 

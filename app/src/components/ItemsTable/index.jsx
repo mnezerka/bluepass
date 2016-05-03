@@ -1,6 +1,7 @@
 import React from 'react';
 import Table from 'react-bootstrap/lib/Table';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
+import './ItemsTable.styl';
 
 export default class ItemsTable extends React.Component{
 
@@ -16,7 +17,7 @@ export default class ItemsTable extends React.Component{
             <tr key={item.name}>
                 <td>{item.name}</td>
                 <td>{item.address}</td>
-                <td>
+                <td className="bp-item-actions">
                     <Glyphicon glyph="pencil" onClick={this.onItemClick.bind(this, item, 'edit')} />
                     {' '}
                     <Glyphicon glyph="trash" onClick={this.onItemClick.bind(this, item, 'delete')} />

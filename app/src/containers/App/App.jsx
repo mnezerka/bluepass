@@ -47,9 +47,6 @@ export default class App extends React.Component{
                             BluePass
                         </Navbar.Brand>
                     </Navbar.Header>
-                    <Nav>
-                        <NavItem eventKey={'/'} onSelect={this.onSelect}>Main</NavItem>
-                    </Nav>
                     <Nav pullRight>
                         <NavItem
                             eventKey={'logout'}
@@ -61,18 +58,14 @@ export default class App extends React.Component{
                 </Navbar>
 
     
-                <div className="container-fluid bp-content">
+                <div className="bp-content">
                     {this.props.children}
                 </div>
 
             </div>
         )
     }
-
-    onSelect = (path) => {
-        this.context.router.push(path);
-    }
-
+   
     onLogout() {
         this.props.actionsAuth.logout();
     }

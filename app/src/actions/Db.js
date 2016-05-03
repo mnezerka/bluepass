@@ -2,6 +2,7 @@ import CryptoJS from 'crypto-js';
 import {CALL_API} from 'redux-api-middleware';
 import {logout} from 'actions/Auth';
 import {Base64} from 'js-base64';
+import {guid} from 'utils';
 
 export const DB_FETCH = 'DB_FETCH';
 export const DB_FETCH_SUCCESS = 'DB_FETCH_SUCCESS';
@@ -36,12 +37,11 @@ export const DB_UNLOCK_FAIL = 'DB_UNLOCK_FAIL';
 
 export function unlockDb(password) {
     return (dispatch, getState) => {
-        console.log(getState());
         if (getState().db.dataRaw === null) {
-           return;
+            return;
         }
 
-        if (getState().db.dataRaw == '') {
+        if (getState().db.dataRaw === '') {
             dispatch({
                 type: DB_UNLOCK_SUCCESS,
                 payload: {password, data: []}
@@ -101,12 +101,16 @@ export function lockDb() {
 
 }
 
-export const DB_ADD_ITEM = 'DB_ADD_ITEM';
+export const DB_SAVE_ITEM = 'DB_SAVE_ITEM';
 
-export function addItem(item) {
-    return (dispatch, getState) => {
+export function saveItem(item) {
+    // if item is new
+    if (item.id === null || item.id === undefined) {
+        item.id = guid();
+    }
+    return (dispatch) => {
         dispatch({
-            type: DB_ADD_ITEM,
+            type: DB_SAVE_ITEM,
             payload: item
         });
     }
