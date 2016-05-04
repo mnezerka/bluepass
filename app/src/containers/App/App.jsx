@@ -6,6 +6,7 @@ import NavItem from 'react-bootstrap/lib/NavItem';
 import {bindActionCreators} from 'redux';
 import * as actionCreatorsAuth from 'actions/Auth';
 import * as actionCreatorsDb from 'actions/Db';
+import './App.styl';
 
 const mapStateToProps = (state) => ({
     isAuthenticated    : state.auth.isAuthenticated,
@@ -56,7 +57,6 @@ export default class App extends React.Component{
                     </Nav>
  
                 </Navbar>
-
     
                 <div className="bp-content">
                     {this.props.children}

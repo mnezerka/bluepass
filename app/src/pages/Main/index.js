@@ -3,9 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actionCreators from 'actions/Db';
 import ItemsTable from 'components/ItemsTable';
-import Glyphicon from 'react-bootstrap/lib/Glyphicon';
-import Nav from 'react-bootstrap/lib/Nav';
-import NavItem from 'react-bootstrap/lib/NavItem';
+import {Alert, Glyphicon, Nav, NavItem} from 'react-bootstrap';
 import AuthModal from 'components/AuthModal';
 import ItemModal from 'components/ItemModal';
 import './Main.styl';
@@ -62,14 +60,21 @@ export default class MainPage extends React.Component {
                             </NavItem>
                         </Nav>
                     </div>
-                    <div className="bp-items">
-                        {!this.props.db.isLocked && 
+                    {!this.props.db.isLocked && 
+                        <div className="bp-items">
                             <ItemsTable
                                 items={this.props.db.data}
                                 onEdit={this.onEditItem.bind(this)}
                             />
-                        }
-                    </div>
+                        </div>
+                    }
+
+                    {this.props.db.isLocked && 
+                        <Alert bsStyle="warning">
+                            BluePass Database is currently locked. It must be unlocked first to view and edit content.
+                        </Alert>
+                    }
+
                 </div>
 
                 <AuthModal

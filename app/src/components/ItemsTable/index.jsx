@@ -17,6 +17,7 @@ export default class ItemsTable extends React.Component{
             <tr key={item.name}>
                 <td>{item.name}</td>
                 <td>{item.address}</td>
+                <td>N/A</td>
                 <td className="bp-item-actions">
                     <Glyphicon glyph="pencil" onClick={this.onItemClick.bind(this, item, 'edit')} />
                     {' '}
@@ -28,11 +29,12 @@ export default class ItemsTable extends React.Component{
 
     render() {
         return (
-            <Table>
+            <Table condensed hover>
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Address</th>
+                        <th>Type</th>
                         <th></th>
                     </tr>
                 </thead>
