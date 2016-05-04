@@ -1,11 +1,19 @@
 import {createReducer} from 'utils';
-import {DB_FETCH, DB_FETCH_SUCCESS, DB_UNLOCK_SUCCESS, DB_LOCK, DB_LOCK_SUCCESS, DB_SAVE_ITEM} from 'actions/Db';
+import {DB_FETCH,
+    DB_FETCH_SUCCESS,
+    DB_UNLOCK_SUCCESS,
+    DB_LOCK,
+    DB_SAVE_ITEM,
+    DB_DELETE_ITEM,
+    DB_SAVE,
+    DB_SAVE_SUCCESS} from 'actions/Db';
 import {LOGOUT_USER} from 'actions/Auth';
 
 const initialState = {
     dataRaw: null,
     data: null,
     isFetching: false,
+    isSaving: false,
     isLocked: true,
     password: null
 };
@@ -24,6 +32,19 @@ export default createReducer(initialState, {
         });
     },
 
+    [DB_SAVE]: (state) => {
+        return Object.assign({}, state, {
+            isSaving: true
+        });
+    },
+
+    [DB_SAVE_SUCCESS]: (state, payload, meta) => {
+        return Object.assign({}, state, {
+            dataRaw: meta.dataRaw,
+            isSaving: false
+        });
+    },
+
     [DB_UNLOCK_SUCCESS]: (state, payload) => {
         return Object.assign({}, state, {
             isLocked: false,
@@ -34,14 +55,9 @@ export default createReducer(initialState, {
 
     [DB_LOCK]: (state) => {
         return Object.assign({}, state, {
+            data: null,
+            password: null,
             isLocked: true,
-        });
-    },
-
-
-    [DB_LOCK_SUCCESS]: (state, payload, meta) => {
-        return Object.assign({}, state, {
-            dataRaw: meta.dataRaw
         });
     },
 
@@ -60,7 +76,13 @@ export default createReducer(initialState, {
         } else {
             newData.push(payload);
         }
-        //console.log(state.data, state.data.slice(), newData);
+        return Object.assign({}, state, {
+            data: newData
+        });
+    },
+
+    [DB_DELETE_ITEM]: (state, idToDel) => {
+        let newData = state.data.filter((item) => { return item.id !== idToDel; });
         return Object.assign({}, state, {
             data: newData
         });

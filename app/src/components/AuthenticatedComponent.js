@@ -26,9 +26,9 @@ export function requireAuthentication(Component) {
 
         checkAuth (isAuthenticated) {
             if (!isAuthenticated) {
-                let redirectAfterLogin = this.props.location.pathname;
-                this.props.dispatch(push('/login?next=${redirectAfterLogin}'));
-                this.context.router.push('login');
+                //let redirectAfterLogin = this.props.location.pathname;
+                //this.props.dispatch(push('/login?next=${redirectAfterLogin}'));
+                this.context.router.push(config.path + 'login');
             }
         }
 

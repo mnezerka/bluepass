@@ -21,3 +21,15 @@ export function guid()
     });
     return uuid;
 }
+
+// export database to midnight hotlist format
+export function dbExportMindnightCommander(items) {
+    let result = [];
+    for (let i = 0; i < items.length; i++) {
+        let item = items[i];
+        let line = `ENTRY "${item.name}" URL "ftp://${item.login}:${item.secret}@${item.address}"`
+        //ENTRY "vbox-prv" URL "sh://adminuser@localhost:2222/home/adminuser"
+        result.push(line);
+    }
+    return result.join('\n');
+}

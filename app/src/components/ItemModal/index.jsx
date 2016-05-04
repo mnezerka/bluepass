@@ -9,6 +9,7 @@ const itemDefault = {
     id: null,
     name: '',
     address: '', 
+    login: '',
     secret: '' 
 };
 
@@ -19,6 +20,7 @@ export default class ItemModal extends React.Component{
             id: React.PropTypes.string,
             name: React.PropTypes.string,
             address: React.PropTypes.string,
+            login: React.PropTypes.string,
             secret: React.PropTypes.string,
         }),
         show: React.PropTypes.bool,
@@ -75,6 +77,14 @@ export default class ItemModal extends React.Component{
                         onChange={this.onChange.bind(this, 'address')}
                         placeholder="Enter item address" />
                     <HelpBlock>Optional address of the item (e.g. url)</HelpBlock>
+
+                    <Label>Login</Label>
+                    <FormControl
+                        type="text"
+                        value={this.state.item.login}
+                        onChange={this.onChange.bind(this, 'login')}
+                        placeholder="Enter item login" />
+                    <HelpBlock>Item login/user name</HelpBlock>
 
                     <Label>Secret</Label>
                     <FormControl

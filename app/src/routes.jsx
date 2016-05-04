@@ -6,7 +6,7 @@ import MainPage from 'pages/Main';
 import {requireAuthentication} from 'components/AuthenticatedComponent';
 
 const routes = ( 
-    <Route path="/" component={App}>
+    <Route path={config.path} component={App}>
         <IndexRoute component={requireAuthentication(MainPage)}/>
         <Route path="login" component={LoginPage}/>
     </Route>

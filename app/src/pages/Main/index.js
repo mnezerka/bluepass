@@ -3,9 +3,12 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actionCreators from 'actions/Db';
 import ItemsTable from 'components/ItemsTable';
-import {Alert, Glyphicon, Nav, NavItem} from 'react-bootstrap';
+import {Alert, Glyphicon, MenuItem, Nav, NavItem, NavDropdown} from 'react-bootstrap';
 import AuthModal from 'components/AuthModal';
 import ItemModal from 'components/ItemModal';
+import ExportModal from 'components/ExportModal';
+import ConfirmationModal from 'components/ConfirmationModal';
+import {dbExportMindnightCommander} from 'utils';
 import './Main.styl';
 
 const mapStateToProps = (state) => ({
@@ -29,7 +32,8 @@ export default class MainPage extends React.Component {
         this.state = {
             isAuthenticating: false,
             item: null,
-            itemAction: null
+            action: null,
+            actionData: null
         }
     }
 
@@ -44,27 +48,35 @@ export default class MainPage extends React.Component {
                     <div className="bp-menu">
                         <Nav bsStyle="pills" stacked activeKey={1} onSelect={this.onAction.bind(this)}>
 
-                        {this.props.db.isLocked && 
-                            <NavItem eventKey="unlock">
-                                <Glyphicon glyph="lock"/>Unlock
-                            </NavItem>
+                            {this.props.db.isLocked && 
+                                <NavItem eventKey="unlock">
+                                    <Glyphicon glyph="lock"/>Unlock
+                                </NavItem>
 
-                        }
-                        {!this.props.db.isLocked && 
-                            <NavItem eventKey="lock">
-                                <Glyphicon glyph="lock"/>Lock
-                            </NavItem>
-                        }
+                            }
+                            {!this.props.db.isLocked && 
+                                <NavItem eventKey="lock">
+                                    <Glyphicon glyph="lock"/>Lock
+                                </NavItem>
+                            }
                             <NavItem eventKey="add" disabled={this.props.db.isLocked}>
                                 <Glyphicon glyph="plus"/>Add Item
                             </NavItem>
+                            <NavDropdown
+                                title="Export"
+                                disabled={this.props.db.isLocked}
+                                id="export-nav-dropdown">
+                                <MenuItem eventKey="export-mc">Midnight commander</MenuItem>    
+                            </NavDropdown>
                         </Nav>
                     </div>
+
                     {!this.props.db.isLocked && 
                         <div className="bp-items">
                             <ItemsTable
                                 items={this.props.db.data}
                                 onEdit={this.onEditItem.bind(this)}
+                                onDelete={this.onDeleteItem.bind(this)}
                             />
                         </div>
                     }
@@ -77,15 +89,26 @@ export default class MainPage extends React.Component {
 
                 </div>
 
-                <AuthModal
-                    show={this.state.isAuthenticating}
-                    onAuthenticate={this.onAuthenticate.bind(this)}/>
+                {this.state.isAuthenticating &&
+                    <AuthModal show
+                        onAuthenticate={this.onAuthenticate.bind(this)}/>}
 
-                <ItemModal
-                    show={this.state.itemAction === 'add' || this.state.itemAction === 'edit'}
-                    item={this.state.item}
-                    onCancel={this.onCancelItem.bind(this)}
-                    onSave={this.onSaveItem.bind(this)}/>
+                {(this.state.action === 'add' || this.state.action === 'edit') &&
+                    <ItemModal show
+                        item={this.state.actionData}
+                        onCancel={this.onCancelAction.bind(this)}
+                        onSave={this.onSaveItem.bind(this)}/>}
+
+                {this.state.action === 'export-mc' &&
+                    <ExportModal show
+                        data={this.state.actionData}
+                        onClose={this.onCancelAction.bind(this)}/>}
+
+                {this.state.action === 'delete' &&
+                    <ConfirmationModal show
+                        message={'Are you sure you want to delete item ' + this.state.actionData.name + '?'}
+                        onOk={this.onDeleteItemConfirmed.bind(this)}
+                        onCancel={this.onCancelAction.bind(this)}/>}
             </div>
        );
     }
@@ -104,26 +127,47 @@ export default class MainPage extends React.Component {
             this.setState({isAuthenticating: true});
             break;
         case 'add':
-            this.setState({item: null, itemAction: 'add'});
+            this.setState({item: null, action: 'add'});
+            break;
+        case 'export-mc':
+            let mcHotlist = dbExportMindnightCommander(this.props.db.data);
+            this.setState({
+                action: 'export-mc',
+                actionData: mcHotlist 
+            });
             break;
         }
     }
 
     onEditItem(item) {
         this.setState({
-            item,
-            itemAction: 'edit'
+            actionData: item,
+            action: 'edit'
+        });
+    }
+
+    onDeleteItem(item) {
+        this.setState({
+            actionData: item,
+            action: 'delete'
+        });
+    }
+
+    onDeleteItemConfirmed() {
+        this.props.actions.deleteItem(this.state.actionData.id);
+        this.setState({
+            item: null,
+            action: null
         });
     }
 
     onSaveItem(item) {
-        console.log('item to save', item);
-        this.setState({itemAction: null});
+        this.setState({action: null});
         this.props.actions.saveItem(item);
     }
 
-    onCancelItem() {
-        this.setState({itemAction: null});
+    onCancelAction() {
+        this.setState({action: null});
     }
 
 }

@@ -98,7 +98,7 @@ export default class LoginPage extends React.Component {
 
     onLogin(e) {
         e.preventDefault();
-        this.props.actions.loginUser(this.state.login, this.state.password, '/');
+        this.props.actions.loginUser(this.state.login, this.state.password, config.path);
     }
 }
 

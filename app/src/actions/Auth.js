@@ -5,10 +5,10 @@ export const LOGIN_USER_REQUEST = 'LOGIN_USER_REQUEST';
 export const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
 export const LOGIN_USER_FAIL = 'LOGIN_USER_FAIL';
 
-export function loginUser(username, password, redirect='/') {
+export function loginUser(username, password, redirect=config.path) {
     return (dispatch) => {
         dispatch({[CALL_API]: {
-            endpoint: config.api + '/auth',
+            endpoint: config.api + 'auth',    //eslint-disable-line no-undef
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

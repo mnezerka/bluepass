@@ -89,9 +89,9 @@ function getTokenData($token) {
 
 function getRequestToken() {
     $headers = array_change_key_case(apache_request_headers(), CASE_LOWER);
-    if(isset($headers['authorization'])) {
+    if(isset($headers['authorization-bp'])) {
         $matches = array();
-        preg_match('/BP (.*)/', $headers['authorization'], $matches);
+        preg_match('/BP (.*)/', $headers['authorization-bp'], $matches);
         if(isset($matches[1])) {
             $token = $matches[1];
             return $token;
