@@ -1,16 +1,13 @@
 import React from 'react';
-import Modal from 'react-bootstrap/lib/Modal';
-import Button from 'react-bootstrap/lib/Button';
-import Label from 'react-bootstrap/lib/ControlLabel';
-import FormControl from 'react-bootstrap/lib/FormControl';
-import HelpBlock from 'react-bootstrap/lib/HelpBlock';
+import {Modal, Button, Label, FormControl} from 'react-bootstrap';
 
 const itemDefault = {
     id: null,
     name: '',
     address: '', 
     login: '',
-    secret: '' 
+    secret: '',
+    type: 'other' 
 };
 
 export default class ItemModal extends React.Component{
@@ -22,6 +19,7 @@ export default class ItemModal extends React.Component{
             address: React.PropTypes.string,
             login: React.PropTypes.string,
             secret: React.PropTypes.string,
+            type: React.PropTypes.string
         }),
         show: React.PropTypes.bool,
         onSave: React.PropTypes.func,
@@ -68,7 +66,6 @@ export default class ItemModal extends React.Component{
                         value={this.state.item.name}
                         onChange={this.onChange.bind(this, 'name')}
                         placeholder="Enter item name" />
-                    <HelpBlock>Unique name of the item.</HelpBlock>
 
                     <Label>Address</Label>
                     <FormControl
@@ -76,7 +73,6 @@ export default class ItemModal extends React.Component{
                         value={this.state.item.address}
                         onChange={this.onChange.bind(this, 'address')}
                         placeholder="Enter item address" />
-                    <HelpBlock>Optional address of the item (e.g. url)</HelpBlock>
 
                     <Label>Login</Label>
                     <FormControl
@@ -84,7 +80,6 @@ export default class ItemModal extends React.Component{
                         value={this.state.item.login}
                         onChange={this.onChange.bind(this, 'login')}
                         placeholder="Enter item login" />
-                    <HelpBlock>Item login/user name</HelpBlock>
 
                     <Label>Secret</Label>
                     <FormControl
@@ -92,7 +87,17 @@ export default class ItemModal extends React.Component{
                         value={this.state.item.secret}
                         onChange={this.onChange.bind(this, 'secret')}
                         placeholder="Enter item secret" />
-                    <HelpBlock>Item secret (e.g. password)</HelpBlock>
+
+                    <Label>Type</Label>
+                    <FormControl
+                        value={this.state.item.type}
+                        onChange={this.onChange.bind(this, 'type')}
+                        componentClass="select"
+                        placeholder="Select item type">
+                        <option value="www">Web site</option>
+                        <option value="ftp">File transfer (FTP)</option>
+                        <option value="other">Other</option>>
+                    </FormControl>
 
                 </Modal.Body>
                 <Modal.Footer>

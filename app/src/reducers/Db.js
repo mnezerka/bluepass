@@ -3,6 +3,7 @@ import {DB_FETCH,
     DB_FETCH_SUCCESS,
     DB_UNLOCK_SUCCESS,
     DB_LOCK,
+    DB_SET_PASSWORD,
     DB_SAVE_ITEM,
     DB_DELETE_ITEM,
     DB_SAVE,
@@ -58,6 +59,12 @@ export default createReducer(initialState, {
             data: null,
             password: null,
             isLocked: true,
+        });
+    },
+
+    [DB_SET_PASSWORD]: (state, payload) => {
+        return Object.assign({}, state, {
+            password: payload,
         });
     },
 

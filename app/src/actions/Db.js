@@ -25,7 +25,7 @@ export function fetchDb() {
             if (action.type === DB_FETCH_FAIL && action.payload.status === 403) {
                 dispatch(logout());
             } else {
-                dispatch(unlockDb('michal'));
+                dispatch(unlockDb('testpw'));
             }
         });
     }
@@ -70,7 +70,6 @@ export function saveDb() {
     }
 }
 
-
 export const DB_UNLOCK_SUCCESS = 'DB_UNLOCK_SUCCESS';
 export const DB_UNLOCK_FAIL = 'DB_UNLOCK_FAIL';
 export function unlockDb(password) {
@@ -109,6 +108,18 @@ export const DB_LOCK = 'DB_LOCK';
 export function lockDb() {
     return (dispatch) => {
         dispatch({type: DB_LOCK});
+    }
+}
+
+export const DB_SET_PASSWORD = 'DB_SET_PASSWORD';
+export function setPassword(password) {
+    return (dispatch) => {
+        dispatch({
+            type: DB_SET_PASSWORD,
+            payload: password
+        }).then(() => {
+            dispatch(saveDb());
+        });
     }
 }
 
